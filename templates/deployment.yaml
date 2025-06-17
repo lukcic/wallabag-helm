@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "wallabag.fullname" . }}
+  labels:
+    {{- include "wallabag.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "wallabag.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "wallabag.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+          env:
+            - name: SYMFONY__ENV__DATABASE_DRIVER
+              value: "pdo_pgsql"
+            - name: SYMFONY__ENV__DATABASE_HOST
+              value: "{{ include "wallabag.fullname" . }}-postgresql"
+            - name: SYMFONY__ENV__DATABASE_PORT
+              value: "5432"
+            - name: SYMFONY__ENV__DATABASE_NAME
+              value: {{ .Values.postgresql.auth.database }}
+            - name: SYMFONY__ENV__DATABASE_USER
+              value: {{ .Values.postgresql.auth.username }}
+            - name: SYMFONY__ENV__DATABASE_PASSWORD
+              valueFrom:
+                secretRef:
+                  name: {{ include "wallabag.fullname" . }}-secret
+                  key: database-password
+            - name: SYMFONY__ENV__DOMAIN_NAME
+              value: {{ .Values.wallabag.domainName }}
+            - name: SYMFONY__ENV__SERVER_NAME
+              value: {{ .Values.wallabag.serverName }}
+            - name: SYMFONY__ENV__LOCALE
+              value: {{ .Values.wallabag.locale }}
+            - name: SYMFONY__ENV__FOSUSER_REGISTRATION
+              value: {{ .Values.wallabag.fosUserRegistration | quote }}
+            - name: SYMFONY__ENV__FOSUSER_CONFIRMATION
+              value: {{ .Values.wallabag.fosUserConfirmation | quote }}
+          volumeMounts:
+            - name: wallabag-images
+              mountPath: /var/www/wallabag/web/assets/images
+          livenessProbe:
+            httpGet:
+              path: /api/info
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /api/info
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: wallabag-images
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "wallabag.fullname" . }}-pvc
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
