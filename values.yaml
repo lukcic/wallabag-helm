@@ -1,3 +1,9 @@
+namespace:
+  create: true
+  name: "wallabag"
+  environment: "production"
+  app: "wallabag"
+
 replicaCount: 1
 
 image:
