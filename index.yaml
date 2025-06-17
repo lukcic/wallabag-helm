@@ -1,0 +1,25 @@
+apiVersion: v1
+entries:
+  wallabag:
+  - apiVersion: v2
+    appVersion: 2.6.13
+    created: "2025-06-17T23:58:11.192383+02:00"
+    description: A self-hostable application for saving web pages
+    digest: c810ab3b1653f7e4d5cb7fe1bf49e0b739a365d4d2a8f814cc12855e31f69bec
+    home: https://wallabag.org/
+    keywords:
+    - wallabag
+    - read-later
+    - bookmark
+    - self-hosted
+    maintainers:
+    - email: info@lukcic.pl
+      name: lukcic
+    name: wallabag
+    sources:
+    - https://github.com/wallabag/wallabag
+    type: application
+    urls:
+    - https://github.com/lukcic/wallabag-helm/main/assets/wallabag-1.0.0.tgz
+    version: 1.0.0
+generated: "2025-06-17T23:58:11.191407+02:00"
