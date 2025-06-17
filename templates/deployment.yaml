@@ -27,9 +27,9 @@ spec:
             - name: SYMFONY__ENV__DATABASE_DRIVER
               value: "pdo_pgsql"
             - name: SYMFONY__ENV__DATABASE_HOST
-              value: "{{ include "wallabag.fullname" . }}-postgresql"
+              value: {{ .Values.postgresql.auth.host }}
             - name: SYMFONY__ENV__DATABASE_PORT
-              value: "5432"
+              value: {{ .Values.postgresql.auth.port | default "5432"  }}
             - name: SYMFONY__ENV__DATABASE_NAME
               value: {{ .Values.postgresql.auth.database }}
             - name: SYMFONY__ENV__DATABASE_USER
