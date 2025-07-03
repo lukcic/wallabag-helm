@@ -2,11 +2,12 @@ apiVersion: v2
 name: wallabag
 description: A self-hostable application for saving web pages
 type: application
-version: 1.0.1
+version: 0.1.0
 appVersion: "2.6.13"
 home: https://wallabag.org/
 sources:
   - https://github.com/wallabag/wallabag
+  - https://github.com/lukcic/wallabag-helm
 maintainers:
   - name: lukcic
     email: info@lukcic.pl

@@ -3,9 +3,9 @@ entries:
   wallabag:
   - apiVersion: v2
     appVersion: 2.6.13
-    created: "2025-06-18T00:12:23.314065+02:00"
+    created: "2025-07-03T22:15:24.823626+02:00"
     description: A self-hostable application for saving web pages
-    digest: 6be974b3b98251f355b0a0cc268c29b344d14be997a94a38eb0ce08e6a2c9adf
+    digest: 88c32dcf234d57a69265605c9a1bebadd03434afe551b5a87416a56d2984b1bf
     home: https://wallabag.org/
     keywords:
     - wallabag
@@ -18,29 +18,9 @@ entries:
     name: wallabag
     sources:
     - https://github.com/wallabag/wallabag
+    - https://github.com/lukcic/wallabag-helm
     type: application
     urls:
-    - https://github.com/lukcic/wallabag-helm/main/assets/wallabag-1.0.1.tgz
-    version: 1.0.1
-  - apiVersion: v2
-    appVersion: 2.6.13
-    created: "2025-06-18T00:12:23.312871+02:00"
-    description: A self-hostable application for saving web pages
-    digest: 2836709a1a19c2dbedada01881de4416b1ddf2ce6d80b15ff7a20552cb29d8a7
-    home: https://wallabag.org/
-    keywords:
-    - wallabag
-    - read-later
-    - bookmark
-    - self-hosted
-    maintainers:
-    - email: info@lukcic.pl
-      name: lukcic
-    name: wallabag
-    sources:
-    - https://github.com/wallabag/wallabag
-    type: application
-    urls:
-    - https://github.com/lukcic/wallabag-helm/main/assets/wallabag-1.0.0.tgz
-    version: 1.0.0
-generated: "2025-06-18T00:12:23.310858+02:00"
+    - wallabag-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-07-03T22:15:24.822889+02:00"

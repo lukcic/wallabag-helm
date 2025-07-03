@@ -1,0 +1,78 @@
+image:
+  repository: wallabag/wallabag
+  tag: 2.6.13
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+wallabag:
+  domainName: "https://wallabag.example.com"
+  serverName: "My Wallabag"
+  secret: "CHANGE_ME_RANDOM_SECRET"
+  fosUserRegistration: true
+  twoFactorAuth: true
+  fromEmail: "wallabag@example.com"
+
+database:
+  type: postgresql               # pdo_pgsql lub pdo_mysql
+  host: "postgresql"             # nazwa hosta / svc
+  port: 5432
+  name: "wallabag"
+  user: "wallabag"
+  existingSecret: ""             # jeśli pusty – chart utworzy własny secret
+  secretPasswordKey: "password"  # klucz w secrete z hasłem
+
+persistence:
+  enabled: true
+  data:
+    size: 5Gi
+    storageClass: ""
+  images:
+    size: 10Gi
+    storageClass: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: wallabag.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []        # np. - secretName: wallabag-tls; hosts: [wallabag.example.com]
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 300m
+    memory: 512Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  runAsUser: 1000
+  runAsNonRoot: true
+  readOnlyRootFilesystem: false
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

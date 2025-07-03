@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "wallabag.fullname" . }}
+  labels:
+    {{- include "wallabag.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.autoscaling.enabled | ternary 1 1 }}
+  selector:
+    matchLabels:
+      app: {{ include "wallabag.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "wallabag.fullname" . }}
+        {{- include "wallabag.labels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ ternary .Values.serviceAccount.name (include "wallabag.fullname" .) .Values.serviceAccount.create }}
+      securityContext:
+        fsGroup: {{ .Values.podSecurityContext.fsGroup }}
+      containers:
+        - name: wallabag
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "wallabag.fullname" . }}
+          env:
+            - name: SYMFONY__ENV__DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "wallabag.databaseSecretName" . }}
+                  key: {{ .Values.database.secretPasswordKey }}
+          ports:
+            - containerPort: 80
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/www/wallabag/data
+            - name: images
+              mountPath: /var/www/wallabag/web/assets/images
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "wallabag.fullname" . }}-data
+        - name: images
+          persistentVolumeClaim:
+            claimName: {{ include "wallabag.fullname" . }}-images

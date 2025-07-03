@@ -1,0 +1,32 @@
+{{- if .Values.persistence.enabled }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "wallabag.fullname" . }}-data
+  labels:
+    {{- include "wallabag.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: {{ default "" .Values.persistence.data.storageClass | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.data.size }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "wallabag.fullname" . }}-images
+  labels:
+    {{- include "wallabag.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: {{ default "" .Values.persistence.images.storageClass | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.images.size }}
+{{- end }}

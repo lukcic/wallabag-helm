@@ -1,0 +1,21 @@
+Wallabag został zainstalowany.
+
+1. Sprawdź status:
+   kubectl get pods -l app={{ include "wallabag.fullname" . }}
+
+2. Dostęp:
+   Service ClusterIP  : http://{{ include "wallabag.fullname" . }}:{{ .Values.service.port }}
+{{- if .Values.ingress.enabled }}
+   Ingress (extern.) : https://{{ (index .Values.ingress.hosts 0).host }}
+{{- end }}
+
+3. Dane trwałe:
+   PVC data   : {{ include "wallabag.fullname" . }}-data
+   PVC images : {{ include "wallabag.fullname" . }}-images
+
+4. Domyślne konto (jeśli rejestracja wyłączona):
+   login: wallabag
+   hasło: wallabag
+
+5. Usuń chart BEZ utraty danych:
+   helm uninstall {{ .Release.Name }} --keep-history
